@@ -1,0 +1,214 @@
+<template>
+  <div class="idou-car-info">
+    <van-cell title="车险购买" size="large">
+      <template v-slot:icon>
+        <div class="vertical-line">
+          <div class="line" :style="{ background: themeColor }"></div>
+        </div>
+      </template>
+      <template v-slot>
+        <div class="driving-icon" :style="{ color: themeColor }" @click="showOcr = true">
+          <i class="orcIcon"></i>
+          <span>行驶证识别</span>
+        </div>
+      </template>
+    </van-cell>
+    <van-field 
+      :error-message="errMessage.areaName"
+      v-model="carInfo.areaName"
+      label="投保城市"
+      readonly
+      size="large"
+      @click="showAddress = true"
+      placeholder="请选择投保城市"
+    ></van-field>
+    <van-field 
+      :error-message="errMessage.licenseNo"
+      :formatter="formatter"
+      v-model="carInfo.licenseNo"
+      label="车牌号"
+      :readonly="licenseNoChecked"
+      size="large"
+      @blur="() => { checkByKey('licenseNo') }"
+      @focus="onFocus"
+      placeholder="请输入车牌号"
+    >
+      <template v-slot:button>
+        <van-checkbox v-model="licenseNoChecked" @change="(s) => { s? carInfo.licenseNo = '': ''; checkByKey('licenseNo') }" :checked-color="themeColor" icon-size="16px" shape="square">
+          <span :style="{ color: themeColor, fontSize: '12px' }">未上牌</span>
+        </van-checkbox>
+      </template>
+    </van-field>
+    <van-field
+      @blur="() => { checkByKey('carOwner') }"
+      :error-message="errMessage.carOwner"
+      v-model="carInfo.carOwner"
+      label="车主姓名" size="large"
+      placeholder="请输入车主姓名">
+    </van-field>
+    <van-cell title="是否是企业车" size="large" v-if="carInfo.isSupportBusinessCar == '1'">
+      <template v-slot>
+        <van-switch :value="carInfo.businessCar === '1'" @input="(s) => { carInfo.businessCar = s? '1': '0' }" :active-color="themeColor" size="22px" />
+      </template>
+    </van-cell>
+    <!-- 立即报价 -->
+    <div class="car-info-btn">
+      <van-button :color="themeColor" round block @click="clickBth" native-type="submit">
+        <span class="car-info-text">立即报价</span>
+      </van-button>
+    </div>
+    <idou-address :areas="areas" @changeArea="changeArea" v-model="showAddress"></idou-address>
+    <idou-ocr v-model="showOcr" @update="updateCar"></idou-ocr>
+
+  </div>
+</template>
+
+<script>
+  /** **/
+  import { deepClone, regexCarNumber, checkName } from '@/js/util.js'
+  export default {
+    name: 'idou-car-info',
+    props: {
+      data: {
+        type: Object,
+        default: () => {
+          return {
+            areaCode: '',
+            licensePrefix: '',
+            areaName: '',
+            licenseNo: '',
+            carOwner: '',
+            businessCar: '0',
+            isSupportBusinessCar: '0'
+          }
+        }
+      },
+      areas: {
+        type: Array,
+        default: () => []
+      },
+      orcIcon: {
+        type: String,
+        default: ''
+      },
+      themeColor: {
+        type: String,
+        default: 'green'
+      }
+    },
+    data() {
+      return {
+        showOcr: false,
+        showAddress: false,
+        licenseNoChecked: false, // 是否上牌
+        checked: false,
+        carInfo: {},
+        errMessage: {
+          areaName: '',
+          licenseNo: '',
+          carOwner: ''
+        },
+        rules: {
+          areaName: function(k) {
+            if(!k) {
+              return '投保城市不能为空'
+            }
+            return ''
+          },
+          licenseNo: (k) => {
+            if(this.licenseNoChecked) {
+              return ''
+            }
+            if(!k) {
+              return '车牌号不能为空'
+            }
+            if(!regexCarNumber(k)) {
+              return '车牌号格式不合法'
+            }
+            return ''
+          },
+          carOwner: function(k) {
+            if(!k) {
+              return '车主姓名不能为空'
+            }
+            if(!checkName(k)) {
+              return '车主姓名格式不合法'
+            }
+            return ''
+          }
+        }
+      }
+    },
+    methods: {
+      formatter(value) {
+        return value.toUpperCase().replace(/\s+/g, '')
+      },
+      checkByKey(k) {
+        this.errMessage[k] = this.rules[k](this.carInfo[k])
+      },
+      checkAll() {
+        Object.keys(this.errMessage).forEach(k => {
+          this.checkByKey(k)
+        })
+        return Object.keys(this.errMessage).every(k => !this.errMessage[k])
+      },
+      clickBth() {
+        // 是否校验通过
+        const IS_CAN_EMIT = this.checkAll()
+        if(IS_CAN_EMIT) {
+          console.log('校验通过')
+          this.$emit('update', this.carInfo)
+        }
+      },
+      changeArea(list) {
+        const { areaCode, licensePrefix, areaCName: areaName } = list[2]
+        this.carInfo = Object.assign(this.carInfo, { areaCode, licensePrefix, areaName })
+      },
+      onFocus() {
+        if(this.carInfo.licenseNo.length <= 2) {
+          this.carInfo.licenseNo = this.carInfo.licensePrefix
+        }
+      },
+      updateCar(data) {
+        this.carInfo = Object.assign(this.carInfo, data)
+      }
+    },
+    watch: {
+      data: {
+        handler(data) {
+          this.carInfo = deepClone(data)
+        },
+        deep: true,
+        immediate: true
+      }
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+.idou-car-info {
+  background: #ffffff;
+  .vertical-line {
+    position: relative;
+    margin-right: 6px;
+    .line {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 18px;
+      content: "";
+    }
+  }
+  .driving-icon {
+    font-size: 10px;
+  }
+  .car-info-btn {
+    padding: 30px 16px 0;
+    .car-info-text {
+      font-size: 16px;
+    }
+  }
+}
+</style>
