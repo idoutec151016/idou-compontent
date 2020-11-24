@@ -14,11 +14,11 @@
 </template>
 
 <script>
-  // import addressList from './address'
+  import addressList from './address'
   export default {
     name: 'idou-address',
     components: {
-      'address-list': () => import('./address.vue')
+      'address-list': addressList
     },
     props: {
       areas: {

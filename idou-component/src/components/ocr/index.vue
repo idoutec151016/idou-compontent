@@ -52,9 +52,11 @@
     certificateDate: '发证日期',
   }
   import axios from 'axios'
+  import idouLoading from '../loading/index'
   export default {
     name: 'idou-ocr',
     components: {
+      idouLoading
       // 'address-list': () => import('./address.vue')
     },
     props: {

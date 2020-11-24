@@ -66,8 +66,14 @@
 <script>
   /** **/
   import { deepClone, regexCarNumber, checkName } from '@/js/util.js'
+  import idouAddress from '../address/index'
+  import idouOcr from '../ocr/index'
   export default {
     name: 'idou-car-info',
+    components: {
+      idouAddress,
+      idouOcr
+    },
     props: {
       data: {
         type: Object,

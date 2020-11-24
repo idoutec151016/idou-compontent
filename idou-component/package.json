@@ -1,6 +1,6 @@
 {
   "name": "idou-component",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": false,
   "main": "./dist/idou-component.common.js",
   "files": [
