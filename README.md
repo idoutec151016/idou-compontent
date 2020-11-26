@@ -4,7 +4,7 @@
 
 ### 引入
 ``` javascript
- npm i idou-compontent
+ npm i idou-component -S 
 ```
 
 ### 注册
@@ -23,7 +23,7 @@
 ```
 ``` javascript
 
-import { address, ocr, carInfo, loading } from 'idou-compontent'
+import { address, ocr, carInfo, loading } from 'idou-component'
 
 export default {
   components: {
