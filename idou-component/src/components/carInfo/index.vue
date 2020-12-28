@@ -11,7 +11,7 @@
           <div class="driving-icon" :style="{ color: themeColor }" @click="showOcr = true">
             <i :class="orcIcon" v-show="orcIcon"></i>
             <slot name="icon"></slot>
-            <span>行驶证识别</span>
+            <span style="margin-top: 2px;">行驶证识别</span>
           </div>
         </div>
 
@@ -219,8 +219,11 @@
     }
   }
   .driving-icon-container {
+    height: 100%;
+    line-height: 14px;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
   }
   .driving-icon {
     font-size: 10px;

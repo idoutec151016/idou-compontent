@@ -2,7 +2,7 @@
   <div id="app">
     <idou-car-info :areas="areas" @update="updateCarInfo" theme-color="green" :data="carInfo">
       <div slot="icon">
-        图标
+        <!-- 图标 -->
       </div>
     </idou-car-info>
   </div>
