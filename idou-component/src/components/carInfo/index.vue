@@ -7,10 +7,14 @@
         </div>
       </template>
       <template v-slot>
-        <div class="driving-icon" :style="{ color: themeColor }" @click="showOcr = true">
-          <i class="orcIcon"></i>
-          <span>行驶证识别</span>
+        <div class="driving-icon-container">
+          <div class="driving-icon" :style="{ color: themeColor }" @click="showOcr = true">
+            <i :class="orcIcon" v-show="orcIcon"></i>
+            <slot name="icon"></slot>
+            <span>行驶证识别</span>
+          </div>
         </div>
+
       </template>
     </van-cell>
     <van-field 
@@ -207,8 +211,15 @@
       content: "";
     }
   }
+  .driving-icon-container {
+    display: flex;
+    justify-content: flex-end;
+  }
   .driving-icon {
     font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .car-info-btn {
     padding: 30px 16px 0;
