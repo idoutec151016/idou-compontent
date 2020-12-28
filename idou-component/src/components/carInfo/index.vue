@@ -1,6 +1,6 @@
 <template>
   <div class="idou-car-info">
-    <van-cell title="车险购买" size="large">
+    <van-cell title="车险购买" size="large" class="title">
       <template v-slot:icon>
         <div class="vertical-line">
           <div class="line" :style="{ background: themeColor }"></div>
@@ -198,6 +198,13 @@
 <style lang="scss" scoped>
 .idou-car-info {
   background: #ffffff;
+  /deep/ .van-cell.title {
+    padding: 0 16px;
+    height: 48px;
+    .van-cell__title {
+      line-height: 48px;
+    }
+  }
   .vertical-line {
     position: relative;
     margin-right: 6px;
