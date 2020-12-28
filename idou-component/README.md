@@ -17,7 +17,9 @@
       @update="updateCarInfo"
       theme-color="green"
       :data="carInfo"
-    ></idou-car-info>
+    >
+    
+    </idou-car-info>
     </div>
 </template>
 ```
@@ -42,6 +44,11 @@ export default {
 |data|车辆数据默认值{areaCode: '',licensePrefix: '',areaName: '',licenseNo: '',carOwner: '',businessCar: '0',isSupportBusinessCar: '0'//是否支持企业车}[Object]|否|
 |@update|接收车辆修改后的数据 [Object]|是|
 
+---------
+### carInfo组件插槽
+|名称|参数说明|是否必须|
+|:---:|:---:|:---:|
+|icon|ocr的图标，支持自定义|-|
 
 -------
 
