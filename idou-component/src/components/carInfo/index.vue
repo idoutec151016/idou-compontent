@@ -8,10 +8,9 @@
       </template>
       <template v-slot>
         <div class="driving-icon-container">
-          <div class="driving-icon" :style="{ color: themeColor }" @click="showOcr = true">
-            <i :class="orcIcon" v-show="orcIcon"></i>
-            <slot name="icon"></slot>
-            <span style="margin-top: 2px;">行驶证识别</span>
+          <div class="driving-icon" :style="{ background: themeColor }" @click="showOcr = true">
+            <img src="./xiangji.png" class="icon">
+            <span style="margin-left: 3px;">行驶证识别</span>
           </div>
         </div>
 
@@ -23,14 +22,20 @@
       label="投保城市"
       readonly
       size="large"
+      input-align="right"
       @click="showAddress = true"
       placeholder="请选择投保城市"
-    ></van-field>
+    >
+      <template #extra>
+        <div class="line-icon"></div>
+      </template>
+    </van-field>
     <van-field 
       :error-message="errMessage.licenseNo"
       :formatter="formatter"
       v-model="carInfo.licenseNo"
       label="车牌号"
+      input-align="right"
       :readonly="licenseNoChecked"
       size="large"
       @blur="() => { checkByKey('licenseNo') }"
@@ -47,12 +52,13 @@
       @blur="() => { checkByKey('carOwner') }"
       :error-message="errMessage.carOwner"
       v-model="carInfo.carOwner"
+      input-align="right"
       label="车主姓名" size="large"
       placeholder="请输入车主姓名">
     </van-field>
     <van-cell title="是否是企业车" size="large" v-if="carInfo.isSupportBusinessCar == '1'">
       <template v-slot>
-        <van-switch :value="carInfo.businessCar === '1'" @input="(s) => { carInfo.businessCar = s? '1': '0' }" :active-color="themeColor" size="22px" />
+        <van-switch :value="carInfo.businessCar === '1'" @input="(s) => { carInfo.businessCar = s? '1': '0' }" inactive-color="#999" :active-color="themeColor" size="22px" />
       </template>
     </van-cell>
     <!-- 立即报价 -->
@@ -205,6 +211,17 @@
       line-height: 48px;
     }
   }
+  /deep/ .van-cell__value .van-switch {
+    &::after {
+      display: inline-block;
+      position: relative;
+      right: 5px;
+      top: -3px;
+      content: '否';
+      font-size: 14px;
+      color: #fff;
+    }
+  }
   .vertical-line {
     position: relative;
     margin-right: 6px;
@@ -214,7 +231,7 @@
       top: 50%;
       transform: translateY(-50%);
       width: 3px;
-      height: 18px;
+      height: 15px;
       content: "";
     }
   }
@@ -226,16 +243,37 @@
     align-items: center;
   }
   .driving-icon {
-    font-size: 10px;
+    padding: 6px;
+    color: #fff;
+    font-size: 12px;
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     align-items: center;
+    border-radius: 6px;
+    .icon {
+      width: 12px;
+    }
   }
   .car-info-btn {
     padding: 30px 16px 0;
     .car-info-text {
       font-size: 16px;
     }
+  }
+}
+.line-icon {
+  position: relative;
+  width: 8px;
+  &::before {
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 8px;
+    height: 8px;
+    content: "";
+    border-top: 1px solid #999;
+    border-right: 1px solid #999;
+    transform: rotate(45deg) translateY(-50%);
   }
 }
 </style>

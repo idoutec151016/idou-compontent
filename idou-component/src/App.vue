@@ -3,6 +3,7 @@
     <idou-car-info :areas="areas" @update="updateCarInfo" theme-color="green" :data="carInfo">
       <div slot="icon">
         <!-- 图标 -->
+        图标
       </div>
     </idou-car-info>
   </div>
@@ -20,9 +21,9 @@ export default {
       areas: [],
       carInfo: {
         areaCode: "130304",
-        areaName: "北戴河区",
+        areaName: "",
         businessCar: "1",
-        isSupportBusinessCar: "0",
+        isSupportBusinessCar: "1",
         carOwner: "李四",
         licenseNo: "冀C12323",
         licensePrefix: "冀C",
