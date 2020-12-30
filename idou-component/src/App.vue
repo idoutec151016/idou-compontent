@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-    <idou-car-info :areas="areas" @update="updateCarInfo" theme-color="green" :data="carInfo">
+    <idou-car-info :areas="areas" @update="updateCarInfo" theme-color="green" :data="carInfo" :isSupportBusinessCarFn="isSupportBusinessCarFn">
       <div slot="icon">
         <!-- 图标 -->
         图标
       </div>
     </idou-car-info>
+    <idou-loading v-model="show"></idou-loading>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ export default {
   },
   data() {
     return {
+      show: true,
       showOcr: true,
       areas: [],
       carInfo: {
@@ -39,6 +41,14 @@ export default {
   methods: {
     updateCarInfo(obj) {
       console.log(obj)
+    },
+    changeArea(data) {
+      console.log(data)
+    },
+    isSupportBusinessCarFn() {
+      // ajax(() => {
+      //   callback(result)
+      // })
     }
   }
 }

@@ -67,7 +67,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .idou-address-main {
   .idou-address-top {
     display: flex;

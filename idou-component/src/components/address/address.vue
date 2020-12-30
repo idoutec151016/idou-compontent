@@ -131,7 +131,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .idou-city-container {
   overflow: hidden;
   width: 100%;

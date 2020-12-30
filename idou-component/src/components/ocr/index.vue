@@ -206,7 +206,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .idou-ocr-content {
   padding: 5px 15px;
 }

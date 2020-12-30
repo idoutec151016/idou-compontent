@@ -39,8 +39,8 @@
   }
 </script>
 
-<style lang="scss" scoped>
-$list: 12;
+<style lang="less" scoped>
+@list: 12;
 .idou-loading {
   position: relative;
   color: #c8c9cc;
@@ -63,7 +63,12 @@ $list: 12;
     height: 24px;
     animation: circular .8s linear infinite;
     animation-timing-function: steps(12);
-
+    each(range(12), {
+      i:nth-child(@{value}) {
+        opacity: (1 - (0.75/12)) *(@value - 1);
+        transform: rotate((@value * 30deg));
+      }
+    });
     i {
       top: 0;
       left: 0;
@@ -79,12 +84,12 @@ $list: 12;
         border-radius: 40%;
         background-color: currentColor;
       }
-      @for $i from 1 through 12 {
-        &:nth-child(#{$i}){//+1是除了第一个以外的li
-          opacity: (#{1 - (0.75 / 12) * ($i - 1)} );
-          transform: rotate(#{$i * 30}deg);
-        }
-      }
+      // @for $i from 1 through 12 {
+      //   &:nth-child(#{$i}){//+1是除了第一个以外的li
+      //     opacity: (#{1 - (0.75 / 12) * ($i - 1)} );
+      //     transform: rotate(#{$i * 30}deg);
+      //   }
+      // }
 
       // @each $c in $list {
       //   $i:index($list, $c);

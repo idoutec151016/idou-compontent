@@ -41,8 +41,10 @@ export default {
 |areas|省市区 [Array]|是|
 |theme-color|主题色默认值green [Sting]|否|
 |orc-icon|OCR iconfont 号 [String]|是|
-|data|车辆数据默认值{areaCode: '',licensePrefix: '',areaName: '',licenseNo: '',carOwner: '',businessCar: '0',isSupportBusinessCar: '0'//是否支持企业车}[Object]|否|
+|isSupportBusinessCarFn| [Function] | callback '0' => 否|
+|data|车辆数据默认值{areaCode: '',licensePrefix: '',areaName: '',licenseNo: '',carOwner: '',businessCar: '0'}[Object]|否|
 |@update|接收车辆修改后的数据 [Object]|是|
+|@changeArea|修改地址的数据 [Object]{ areaCode, areaName }|是|
 
 ---------
 ### carInfo组件插槽
@@ -77,3 +79,35 @@ export default {
 |v-model|是否显示|是|
 |themeColor| 主题色 |否|
 |@update|修改后的数据|是|
+
+
+
+```javasript
+  // 获取是否支持企业车
+methods: {
+  isSupportBusinessCarFn(callback) {
+    /**
+    * 参数
+    * params = {
+        payload: {
+          cmd: "QueryCompanyCarmInfo",
+          area_Code, //省市区编码
+          channel,
+          sourceCode,
+          account,
+          appid,
+        },
+        account,
+        appid,
+
+      }
+    */
+
+    axios.post('/mobile/basic', qs.stringify({ req: params }),).then(res => {
+      callback('---参数---1 或者 0')
+    })
+  }
+}
+
+
+```

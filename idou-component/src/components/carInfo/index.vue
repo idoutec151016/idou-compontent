@@ -56,7 +56,7 @@
       label="车主姓名" size="large"
       placeholder="请输入车主姓名">
     </van-field>
-    <van-cell title="是否是企业车" size="large" v-if="carInfo.isSupportBusinessCar == '1'">
+    <van-cell title="是否是企业车" size="large" v-if="isSupportBusinessCar == '1'">
       <template v-slot>
         <van-switch :value="carInfo.businessCar === '1'" @input="(s) => { carInfo.businessCar = s? '1': '0' }" inactive-color="#999" :active-color="themeColor" size="22px" />
       </template>
@@ -75,7 +75,7 @@
 
 <script>
   /** **/
-  import { deepClone, regexCarNumber, checkName } from '@/js/util.js'
+  import { deepClone, regexCarNumber, checkName } from '../../js/util.js'
   import idouAddress from '../address/index'
   import idouOcr from '../ocr/index'
   export default {
@@ -94,10 +94,13 @@
             areaName: '',
             licenseNo: '',
             carOwner: '',
-            businessCar: '0',
-            isSupportBusinessCar: '0'
+            businessCar: '0'
           }
         }
+      },
+      isSupportBusinessCarFn: {
+        type: Function,
+        default: () => null
       },
       areas: {
         type: Array,
@@ -152,7 +155,8 @@
             }
             return ''
           }
-        }
+        },
+        isSupportBusinessCar: '0'
       }
     },
     methods: {
@@ -178,12 +182,18 @@
       },
       changeArea(list) {
         const { areaCode, licensePrefix, areaCName: areaName } = list[2]
+        this.supportBusinessCar(areaCode)
         this.carInfo = Object.assign(this.carInfo, { areaCode, licensePrefix, areaName })
       },
       onFocus() {
         if(this.carInfo.licenseNo.length <= 2) {
           this.carInfo.licenseNo = this.carInfo.licensePrefix
         }
+      },
+      supportBusinessCar(areaCode) {
+        this.isSupportBusinessCarFn(areaCode, (s) => {
+          this.isSupportBusinessCar = s
+        })
       },
       updateCar(data) {
         this.carInfo = Object.assign(this.carInfo, data)
@@ -193,6 +203,9 @@
       data: {
         handler(data) {
           this.carInfo = deepClone(data)
+          if(this.carInfo.areaCode) {
+            this.supportBusinessCar(this.carInfo.areaCode)
+          }
         },
         deep: true,
         immediate: true
@@ -201,7 +214,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .idou-car-info {
   background: #ffffff;
   /deep/ .van-cell.title {
