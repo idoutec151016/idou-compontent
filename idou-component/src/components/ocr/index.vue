@@ -1,7 +1,7 @@
 <template>
-  <van-popup v-model="show" position="center" @close="close" get-container="body" :style="{ width: '90%', minWidth: '300px' }">
+  <van-popup v-model="show" position="center" @close="close" get-container="body" :style="{ width: '95%', minWidth: '300px' }">
     <div class="idou-ocr-main">
-      <div class="idou-title">上传行驶证<div class="idou-address-close" @click="close"></div></div>
+      <div class="idou-title">行驶证主页<div class="idou-address-close" @click="close"></div></div>
       <div class="idou-ocr-content">
         <van-uploader :after-read="afterRead" style="width: 100%">
           <div class="idou-ocr-bg">
@@ -12,26 +12,30 @@
             <img v-show="status == 'finish'" :src="orcImg">
             <div v-show="status == 'error'">err</div>
           </div>
+          <div class="tap" v-show="status == 'start'">
+            <img src="./tap.png">
+          </div>
         </van-uploader>
-        <div class="prompt-text">识别结果可能存在误差，请核对并修改</div>
+        <div v-if="status == 'finish'" class="prompt-text">识别结果可能存在误差，请核对并修改</div>
+        <div v-else class="prompt-text" style="color: #333">识别结果可能存在误差，请核对并修改</div>
+
         <div v-show="status == 'finish' || status == 'error'">
-          <van-field label="车牌号" v-model="carInfo.licenseNo"  placeholder="请输入车牌号"></van-field>
-          <van-field label="车主姓名" v-model="carInfo.carOwner" placeholder="请输入车主姓名"></van-field>
-          <van-field label="品牌型号" v-model="carInfo.modelName" placeholder="请输入品牌型号"></van-field>
-          <van-field label="车牌识别码" v-model="carInfo.frameNo" placeholder="请输入车牌识别码"></van-field>
-          <van-field label="发动机号" v-model="carInfo.engineNo" placeholder="请输入发动机号"></van-field>
+          <van-field label="车牌号" v-model="carInfo.licenseNo"  maxlength="8"  placeholder="请输入车牌号"></van-field>
+          <van-field label="车主姓名" v-model="carInfo.carOwner"  maxlength="20" placeholder="请输入车主姓名"></van-field>
+          <van-field label="品牌型号" v-model="carInfo.modelName" maxlength="20" placeholder="请输入品牌型号"></van-field>
+          <van-field label="车牌识别码" v-model="carInfo.frameNo" maxlength="17" placeholder="请输入车牌识别码"></van-field>
+          <van-field label="发动机号" v-model="carInfo.engineNo"  maxlength="17" placeholder="请输入发动机号"></van-field>
           <van-field label="注册日期" v-model="carInfo.enrollDate" readonly placeholder="请选择注册日期" @click="clickPickerDate('enrollDate')">
             <div slot="right-icon" class="ocr-right-icon"></div>
           </van-field>
           <van-field label="发证日期" v-model="carInfo.certificateDate" readonly placeholder="请选择发证日期" @click="clickPickerDate('certificateDate')">
             <div slot="right-icon" class="ocr-right-icon"></div>
           </van-field>
-          <div style="padding: 20px 0;">
-            <van-button  :color="themeColor" round block @click="clickBth" native-type="submit">
-              <span>确认</span>
-            </van-button>
-          </div>
-          
+        </div>
+        <div style="padding: 20px 0;">
+          <van-button  :color="themeColor" round block @click="clickBth" native-type="submit">
+            <span style="font-size: 20px">确认</span>
+          </van-button>
         </div>
       </div>
     </div>
@@ -111,6 +115,11 @@
         this.orcImg = ''
       },
       clickBth() {
+        console.log(this.status)
+        if(this.status !== 'finish'){
+          this.$toast('请上传行驶证')
+          return
+        }
         this.$emit('update', this.carInfo)
         this.close()
       },
@@ -209,6 +218,26 @@
 <style lang="less" scoped>
 .idou-ocr-content {
   padding: 5px 15px;
+  .tap{
+    position: absolute;
+    width:50px;
+    height:50px;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    img{
+        width:50px;
+        animation: move 1s infinite;
+    }
+    // p{
+    //     font-size 14px
+    //     width:100px
+    //     color:#333
+    //     animation move 1s infinite
+
+    // }
+}
 }
 .ocr-right-icon {
   width: 8px;
@@ -224,7 +253,7 @@
   padding-top: 5px;
 }
 .idou-ocr-bg {
-  width: 82vw;
+  width: 88vw;
   height: 200px;
   position: relative;
   .idou-ocr-loading {
@@ -245,7 +274,7 @@
   text-align: center;
   font-size: 16px;
   padding: 10px 0;
-  color: #afa8a8;
+  color: #333;
   position: relative;
   .idou-address-close {
     position: absolute;
@@ -257,7 +286,7 @@
     &::before, &::after {
       position: absolute;
       content: ' ';
-      background-color: #afa8a8;
+      background-color: #333;
       left: 20px;
       width: 1px;
       height: 20px;
@@ -268,6 +297,18 @@
     &::after  {
       transform: rotate(-45deg);
     }
+  }
+}
+@keyframes move{
+  0% {
+      transform: translateY(5px)
+      }
+  50% {
+    transform: translateY(-5px)
+  }
+  100% {
+    transform: translateY(5px)
+
   }
 }
 </style>

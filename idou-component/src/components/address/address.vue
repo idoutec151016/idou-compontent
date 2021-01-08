@@ -92,7 +92,7 @@
         if(s == '2') {// 处理市
           this.citys = this.citysData.filter(item => item.upperCode == this.chooseAddressList[0].areaCode)
         } else if(s == '3'){// 处理县区
-          this.countys = this.countysData.filter(item => item.upperCode == this.chooseAddressList[1].areaCode)
+          this.countys = this.countysData.filter(item => item.upperCode == this.chooseAddressList[1].areaCode || item.areaCode == this.chooseAddressList[1].areaCode)
         }
       },
       changeTitle(i) {

@@ -6,7 +6,8 @@
         图标
       </div>
     </idou-car-info>
-    <idou-loading v-model="show"></idou-loading>
+    <!-- <idou-loading v-model="show"></idou-loading> -->
+    <!-- <p contenteditable="true" @blur="focus">这是一个可编辑的段落。<img style="width: 20px" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa2.att.hudong.com%2F27%2F81%2F01200000194677136358818023076.jpg&refer=http%3A%2F%2Fa2.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1612340658&t=cafac0ad2c7888284926dd0c6b0759d2" alt=""></p> -->
   </div>
 </template>
 
@@ -39,6 +40,11 @@ export default {
     }, 5000)
   },
   methods: {
+    focus() {
+       var lastEditSelection = getSelection()
+       console.log(lastEditSelection)
+       console.log(lastEditSelection.getRangeAt(0))
+    },
     updateCarInfo(obj) {
       console.log(obj)
     },

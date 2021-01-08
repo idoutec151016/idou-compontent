@@ -1,6 +1,9 @@
 <template>
   <div class="idou-car-info">
-    <van-cell title="车险购买" size="large" class="title">
+    <van-cell title="车险购买" class="title">
+      <template #title>
+        <div class="label header-title">车险购买</div>
+      </template>
       <template v-slot:icon>
         <div class="vertical-line">
           <div class="line" :style="{ background: themeColor }"></div>
@@ -8,9 +11,10 @@
       </template>
       <template v-slot>
         <div class="driving-icon-container">
-          <div class="driving-icon" :style="{ background: themeColor }" @click="showOcr = true">
-            <img src="./xiangji.png" class="icon">
-            <span style="margin-left: 3px;">行驶证识别</span>
+          <div class="driving-icon" :style="{ color: themeColor }" @click="showOcr = true">
+            <!-- <img src="./xiangji1.png" class="icon"> -->
+            <i class="van-icon van-icon-photograph"></i>
+            <span style="margin-left: 3px;">行驶证扫描</span>
           </div>
         </div>
 
@@ -19,13 +23,14 @@
     <van-field 
       :error-message="errMessage.areaName"
       v-model="carInfo.areaName"
-      label="投保城市"
       readonly
-      size="large"
       input-align="right"
       @click="showAddress = true"
       placeholder="请选择投保城市"
     >
+      <template #label>
+        <div class="label">投保城市</div>
+      </template>
       <template #extra>
         <div class="line-icon"></div>
       </template>
@@ -36,14 +41,17 @@
       v-model="carInfo.licenseNo"
       label="车牌号"
       input-align="right"
+      maxlength="8"
       :readonly="licenseNoChecked"
-      size="large"
       @blur="() => { checkByKey('licenseNo') }"
       @focus="onFocus"
       placeholder="请输入车牌号"
     >
+      <template #label>
+        <div class="label">车牌号</div>
+      </template>
       <template v-slot:button>
-        <van-checkbox v-model="licenseNoChecked" @change="(s) => { s? carInfo.licenseNo = '': ''; checkByKey('licenseNo') }" :checked-color="themeColor" icon-size="16px" shape="square">
+        <van-checkbox v-model="licenseNoChecked" @change="(s) => { s? carInfo.licenseNo = '': ''; checkByKey('licenseNo') }" :checked-color="themeColor" icon-size="16px">
           <span :style="{ color: themeColor, fontSize: '12px' }">未上牌</span>
         </van-checkbox>
       </template>
@@ -52,18 +60,25 @@
       @blur="() => { checkByKey('carOwner') }"
       :error-message="errMessage.carOwner"
       v-model="carInfo.carOwner"
+      @focus="(e) => { e.target.value = carInfo.carOwner }"
       input-align="right"
-      label="车主姓名" size="large"
+      maxlength="20"
       placeholder="请输入车主姓名">
+      <template #label>
+        <div class="label">车主姓名</div>
+      </template>
     </van-field>
-    <van-cell title="是否是企业车" size="large" v-if="isSupportBusinessCar == '1'">
+    <van-cell class="is-business-car" v-if="isSupportBusinessCar == '1'">
+      <template #title>
+        <div class="label">企业车</div>
+      </template>
       <template v-slot>
         <van-switch :value="carInfo.businessCar === '1'" @input="(s) => { carInfo.businessCar = s? '1': '0' }" inactive-color="#999" :active-color="themeColor" size="22px" />
       </template>
     </van-cell>
     <!-- 立即报价 -->
     <div class="car-info-btn">
-      <van-button :color="themeColor" round block @click="clickBth" native-type="submit">
+      <van-button class="btn" :color="themeColor" round block @click="clickBth" native-type="submit">
         <span class="car-info-text">立即报价</span>
       </van-button>
     </div>
@@ -185,10 +200,14 @@
         this.supportBusinessCar(areaCode)
         this.carInfo = Object.assign(this.carInfo, { areaCode, licensePrefix, areaName })
       },
-      onFocus() {
+      onFocus(e) {
+        console.log(e)
         if(this.carInfo.licenseNo.length <= 2) {
           this.carInfo.licenseNo = this.carInfo.licensePrefix
         }
+        setTimeout(() => {
+          e.target.value = (this.carInfo.licenseNo)
+        },20)
       },
       supportBusinessCar(areaCode) {
         this.isSupportBusinessCarFn(areaCode, (s) => {
@@ -217,6 +236,50 @@
 <style lang="less" scoped>
 .idou-car-info {
   background: #ffffff;
+  .label {
+    width: 60px;
+    display: inline-block;
+    white-space: nowrap;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: distribute;
+    &.header-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    &::after {
+      display: block;
+      width: 100%;
+      content: '';
+    }
+  }
+  // ::-webkit-input-placeholder {
+  //   font-size: 16px;
+  // }
+  // /deep/ .van-field__label {
+  //   width: 58px;
+  //   // &::after {
+  //   //   display: inline-block;
+  //   //   width: 100%;
+  //   //   content: '';
+  //   //   height: 0;
+  //   //   overflow: hidden;
+  //   // }
+  // }
+  /deep/ .van-field__label span{
+    
+    
+  }
+  .is-business-car {
+    height: 48px;
+    align-items: center;
+    /deep/ .van-cell__value {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
   /deep/ .van-cell.title {
     padding: 0 16px;
     height: 48px;
@@ -227,11 +290,12 @@
   /deep/ .van-cell__value .van-switch {
     &::after {
       display: inline-block;
-      position: relative;
-      right: 5px;
-      top: -3px;
+      position: absolute;
+      line-height: 22px;
+      top: 0;
+      right: 6px;
       content: '否';
-      font-size: 14px;
+      font-size: 12px;
       color: #fff;
     }
   }
@@ -256,19 +320,25 @@
     align-items: center;
   }
   .driving-icon {
-    padding: 6px;
-    color: #fff;
-    font-size: 12px;
+    // padding: 6px;
+    // color: #fff;
+    font-size: 10px;
     display: flex;
-    // flex-direction: column;
+    flex-direction: column;
     align-items: center;
     border-radius: 6px;
     .icon {
-      width: 12px;
+      width: 22px;
+    }
+    .van-icon-photograph {
+      font-size: 16px;
     }
   }
   .car-info-btn {
-    padding: 30px 16px 0;
+    padding: 15px 16px 15px;
+    .btn {
+      box-shadow:  2px 2px 10px  rgba(0, 0, 0, 0.3);
+    }
     .car-info-text {
       font-size: 16px;
     }

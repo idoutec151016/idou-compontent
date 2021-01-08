@@ -1,6 +1,6 @@
 {
   "name": "idou-component",
-  "version": "0.2.25",
+  "version": "0.2.36",
   "private": false,
   "main": "./src/components/index.js",
   "files": [
@@ -18,21 +18,21 @@
   },
   "bundleDependencies": false,
   "devDependencies": {
-    "less": "^4.0.0",
-    "less-loader": "^7.2.1",
-    "core-js": "^3.6.5",
-    "vant": "^2.10.14",
-    "vue": "^2.6.11",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "axios": "^0.21.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-import": "^1.13.1",
+    "core-js": "^3.6.5",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "less": "^4.0.0",
+    "less-loader": "^7.2.1",
     "node-sass": "^5.0.0",
     "sass-loader": "^10.1.0",
+    "vant": "^2.12.2",
+    "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
