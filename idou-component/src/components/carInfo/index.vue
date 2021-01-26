@@ -35,6 +35,7 @@
         <div class="line-icon"></div>
       </template>
     </van-field>
+    <!-- :readonly="licenseNoChecked" -->
     <van-field 
       :error-message="errMessage.licenseNo"
       :formatter="formatter"
@@ -42,7 +43,6 @@
       label="车牌号"
       input-align="right"
       maxlength="8"
-      :readonly="licenseNoChecked"
       @blur="() => { checkByKey('licenseNo') }"
       @focus="onFocus"
       placeholder="请输入车牌号"
@@ -50,17 +50,17 @@
       <template #label>
         <div class="label">车牌号</div>
       </template>
-      <template v-slot:button>
+      <!-- <template v-slot:button>
         <van-checkbox v-model="licenseNoChecked" @change="(s) => { s? carInfo.licenseNo = '': ''; checkByKey('licenseNo') }" :checked-color="themeColor" icon-size="16px">
           <span :style="{ color: themeColor, fontSize: '12px' }">未上牌</span>
         </van-checkbox>
-      </template>
+      </template> -->
     </van-field>
     <van-field
       @blur="() => { checkByKey('carOwner') }"
       :error-message="errMessage.carOwner"
       v-model="carInfo.carOwner"
-      @focus="(e) => { e.target.value = carInfo.carOwner }"
+      @focus="focusCarOwner"
       input-align="right"
       maxlength="20"
       placeholder="请输入车主姓名">
@@ -150,18 +150,23 @@
             return ''
           },
           licenseNo: (k) => {
-            if(this.licenseNoChecked) {
+            // if(this.licenseNoChecked) {
+            //   return ''
+            // }
+            if(this.carInfo.licenseNo.length < 3) {
+              // return '车牌号不能为空'
+              this.carInfo.licenseNo = ''
               return ''
-            }
-            if(!k) {
-              return '车牌号不能为空'
             }
             if(!regexCarNumber(k)) {
               return '车牌号格式不合法'
             }
             return ''
           },
-          carOwner: function(k) {
+          carOwner: (k) => {
+            if(this.carInfo && this.carInfo.areaCode && this.carInfo.areaCode.substring(0,2) == '31') {
+              return ''
+            }
             if(!k) {
               return '车主姓名不能为空'
             }
@@ -192,6 +197,9 @@
         const IS_CAN_EMIT = this.checkAll()
         if(IS_CAN_EMIT) {
           console.log('校验通过')
+          // if(this.carInfo.licenseNo.length < 3) {
+          //   this.carInfo.licenseNo = ''
+          // }
           this.$emit('update', this.carInfo)
         }
       },
@@ -202,12 +210,19 @@
       },
       onFocus(e) {
         console.log(e)
+        e.target.value = ''
         if(this.carInfo.licenseNo.length <= 2) {
-          this.carInfo.licenseNo = this.carInfo.licensePrefix
+          this.carInfo.licenseNo = this.carInfo.licensePrefix || ''
         }
         setTimeout(() => {
-          e.target.value = (this.carInfo.licenseNo)
-        },20)
+          e.target.value = (this.carInfo.licenseNo || '')
+        }, 30)
+      },
+      focusCarOwner(e) {
+        e.target.value = ''
+        setTimeout(() => {
+          e.target.value = (this.carInfo.carOwner || '')
+        }, 30)
       },
       supportBusinessCar(areaCode) {
         this.isSupportBusinessCarFn(areaCode, (s) => {
